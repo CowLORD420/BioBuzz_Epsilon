@@ -8,6 +8,7 @@ public class Turret {
     private static int maxTicksLeft = 0;
     private static int maxTicksRight = 0;
     private int ticks;
+    private static int TICKS_PER_DEGREE = 0;
 
     public Turret(DcMotorEx turretMotor){
         motor = turretMotor;
@@ -32,6 +33,8 @@ public class Turret {
         return false;
     }
 
-
+    public int getTurretDegrees(){
+        return ticks / TICKS_PER_DEGREE;
+    }
 
 }
