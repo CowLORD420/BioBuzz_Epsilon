@@ -10,6 +10,11 @@ public class Robot {
     public GamepadWrapper wrapper;
     public CommandScheduler scheduler;
 
+    public enum Color{
+        RED,
+        BLUE
+    }
+
     private final HardwareMap hmap;
     private final Gamepad gamepad;
 

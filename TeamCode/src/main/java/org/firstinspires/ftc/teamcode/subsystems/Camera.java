@@ -7,18 +7,27 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 import java.util.List;
-
+// Todo make aprilTags point to middle of the balansoar type shii
+// Red is pipeline 0 blue is pipeline 1
 public class Camera {
     private final Limelight3A camGirl;
     private LLResult result;
     private List<LLResultTypes.FiducialResult> fiducials;
 
-    public Camera(Limelight3A limelight3A){
+    public Camera(Limelight3A limelight3A, Robot.Color color){
         camGirl = limelight3A;
-        camGirl.pipelineSwitch(0);
         camGirl.stop();
+        switch (color){
+            case RED:
+                camGirl.pipelineSwitch(0);
+                break;
+            case BLUE:
+                camGirl.pipelineSwitch(1);
+                break;
+        }
     }
 
     public void init(){
@@ -34,7 +43,7 @@ public class Camera {
         camGirl.stop();
     }
 
-    public void updateYaw(double yawInDegrees){
+    public void updateYawInDegrees(double yawInDegrees){
         camGirl.updateRobotOrientation(yawInDegrees);
     }
 
@@ -43,7 +52,7 @@ public class Camera {
         return fiducials != null && !fiducials.isEmpty() && result != null && result.isValid();
     }
 
-    public double getError() {
+    public double getErrorInDegrees() {
         if (hasTarget()) {
             return -result.getTx();
         }

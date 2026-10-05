@@ -5,10 +5,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class Turret {
     private final DcMotorEx motor;
-    private static int maxTicksLeft = 0;
-    private static int maxTicksRight = 0;
-    private int ticks;
-    private static int TICKS_PER_DEGREE = 0;
+    private static double maxTicksLeft = 0;
+    private static double maxTicksRight = 0;
+    private double ticks;
+    private static double TICKS_PER_DEGREE = 0;
+    private double robotYaw;
+    private static double TICKS_ERROR = 0;
 
     public Turret(DcMotorEx turretMotor){
         motor = turretMotor;
@@ -20,7 +22,7 @@ public class Turret {
         motor.setPower(power);
     }
 
-    public int getTicks(){
+    public double getTicks(){
         return ticks;
     }
 
@@ -29,12 +31,25 @@ public class Turret {
     }
 
     public boolean atMaxTicks(){
-        if(ticks == maxTicksLeft || ticks == maxTicksRight) return true;
-        return false;
+        return ticks == maxTicksLeft - TICKS_ERROR || ticks == maxTicksRight - TICKS_ERROR;
     }
 
-    public int getTurretDegrees(){
-        return ticks / TICKS_PER_DEGREE;
+    public double getYaw(){
+        return Math.toRadians(ticks / TICKS_PER_DEGREE);
+    }
+
+    public void setRobotYaw(double robotYaw){
+        this.robotYaw = robotYaw;
+    }
+
+    public double getRobotRelativeYaw(){
+        return wrap(robotYaw + getYaw());
+    }
+
+    private static double wrap(double angle) {
+        while (angle > Math.PI)  angle -= 2 * Math.PI;
+        while (angle < -Math.PI) angle += 2 * Math.PI;
+        return angle;
     }
 
 }
