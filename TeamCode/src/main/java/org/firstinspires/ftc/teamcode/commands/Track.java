@@ -19,6 +19,7 @@ public class Track implements Command {
     private final Camera camera;
     private final Pinpoint pinpoint;
     private PIDF pidf = new PIDF(0,0,0,0);
+    private double error = 0;
 
     private Pose2D targetFieldPose;
     private static final Pose2D RED_TARGET_POSE = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.RADIANS, 0);
@@ -28,6 +29,14 @@ public class Track implements Command {
     public static double kD = 0.0;
     public static double kI = 0.0;
     public static double kP = 0.0;
+
+    private enum TrackState{
+        CAMERA,
+        ODOMETRY,
+        UNWIND
+    }
+
+    private TrackState trackState = TrackState.ODOMETRY;
 
     public Track(Turret turret, Camera camera, Pinpoint pinpoint, Robot.Color color){
         this.turret = turret;
@@ -54,25 +63,35 @@ public class Track implements Command {
     public void update() {
         pidf.setPIDF(kP, kI, kD, kF);
 
-        double error;
-
         /*Todo change this into a state machine and make sure the changes from
            profiled unwind back to tarcking is smooth and somehow check if the error between what the
            camera error and odo error are somewhat close so it doesn't go crazy from a fake read
          */
 
-        if (camera.hasTarget()) {
-            error = camera.getErrorInDegrees();
-        } else {
-            error = Math.toDegrees(
-                    odoTargetAngle(pinpoint.getPosition(), targetFieldPose, turret.getYaw())
-            );
-        }
 
-        if (turret.atMaxTicks()) {
-            // hand off to a profiled unwind move here instead of PID —
-            return;
+        switch (trackState){
+            case CAMERA:
+                if (!camera.hasTarget()){
+                    trackState = TrackState.ODOMETRY;
+                    break;
+                }
+                error = camera.getErrorInDegrees();
+                break;
+
+            case ODOMETRY:
+                if (camera.hasTarget()){
+                    trackState = TrackState.CAMERA;
+                    break;
+                }
+                error = odoTargetAngle(pinpoint.getPosition(), targetFieldPose, turret.getYaw());
+                break;
+
+            case UNWIND:
+
+                break;
+
         }
+        if (turret.atMaxTicks()) trackState = TrackState.UNWIND;
 
         turret.setPower(pidf.calculate(error));
     }

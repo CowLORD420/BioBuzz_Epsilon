@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.utils.GoBildaPinpointDriver;
 
 public class Pinpoint {
@@ -12,7 +13,6 @@ public class Pinpoint {
     private double yaw;
     private double x;
     private double y;
-
     //Todo calibrate
 
     public Pinpoint(GoBildaPinpointDriver pinpoint){

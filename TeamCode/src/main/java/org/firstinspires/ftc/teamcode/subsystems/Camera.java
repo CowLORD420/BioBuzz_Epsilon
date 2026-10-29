@@ -47,7 +47,6 @@ public class Camera {
         camGirl.updateRobotOrientation(yawInDegrees);
     }
 
-    //inverted because Tx is -to the right in the camera frame
     public boolean hasTarget() {
         return fiducials != null && !fiducials.isEmpty() && result != null && result.isValid();
     }
