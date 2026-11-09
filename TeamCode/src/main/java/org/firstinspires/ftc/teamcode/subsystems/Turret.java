@@ -30,8 +30,16 @@ public class Turret {
         ticks = motor.getCurrentPosition();
     }
 
+//    public boolean atMaxTicks(){
+//        return ticks == maxTicksLeft - TICKS_ERROR || ticks == maxTicksRight - TICKS_ERROR;
+//    }
+
+    public boolean atMinTicks(){
+        return ticks == maxTicksLeft + TICKS_ERROR;
+    }
+
     public boolean atMaxTicks(){
-        return ticks == maxTicksLeft - TICKS_ERROR || ticks == maxTicksRight - TICKS_ERROR;
+        return ticks == maxTicksRight - TICKS_ERROR;
     }
 
     public double getYaw(){
