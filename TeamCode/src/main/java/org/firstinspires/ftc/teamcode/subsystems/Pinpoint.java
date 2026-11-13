@@ -13,8 +13,8 @@ public class Pinpoint {
     private double yaw;
     private double x;
     private double y;
-    //Todo calibrate
 
+    //Todo calibrate
     public Pinpoint(GoBildaPinpointDriver pinpoint){
         this.pinpoint = pinpoint;
         pinpoint.setOffsets(0, 0, DistanceUnit.MM);

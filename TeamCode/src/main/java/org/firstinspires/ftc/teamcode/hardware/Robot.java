@@ -15,12 +15,15 @@ public class Robot {
         BLUE
     }
 
+    public Color color;
+
     private final HardwareMap hmap;
     private final Gamepad gamepad;
 
-    public Robot(HardwareMap hmap, Gamepad gamepad){
+    public Robot(HardwareMap hmap, Gamepad gamepad, Color color){
         this.hmap = hmap;
         this.gamepad = gamepad;
+        this.color = color;
     }
 
     public void init () {

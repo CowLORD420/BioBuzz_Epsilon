@@ -55,9 +55,7 @@ public class Turret {
     }
 
     private static double wrap(double angle) {
-        while (angle > Math.PI)  angle -= 2 * Math.PI;
-        while (angle < -Math.PI) angle += 2 * Math.PI;
-        return angle;
+        return angle - 2 * Math.PI * Math.floor((angle + Math.PI) / (2 * Math.PI));
     }
 
 }

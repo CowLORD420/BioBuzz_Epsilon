@@ -5,10 +5,12 @@ import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
+import java.util.ArrayList;
 import java.util.List;
 // Todo make aprilTags point to middle of the balansoar type shii
 // Red is pipeline 0 blue is pipeline 1
@@ -48,7 +50,7 @@ public class Camera {
     }
 
     public boolean hasTarget() {
-        return fiducials != null && !fiducials.isEmpty() && result != null && result.isValid();
+        return fiducials != null && !fiducials.isEmpty() && result.isValid() && fiducials.size() >= 3;
     }
 
     public double getErrorInDegrees() {
@@ -60,18 +62,23 @@ public class Camera {
 
     //call at init throwException if no april tag
     public Pose2D getBotpose(){
-        if (fiducials != null) {
-            if (result.isValid()) {
-                return pose3Dto2D(
-                        result.getBotpose_MT2()
-                );
-            }
+        if (hasTarget()) {
+            return pose3Dto2D(
+                    result.getBotpose_MT2()
+            );
         }
-        throw new RuntimeException("No scan");
+        //throw new RuntimeException("No scan");
+        return new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.RADIANS, 0);
     }
 
-    public int getTagID(){
-        return fiducials.get(0).getFiducialId();
+    public List<Integer> getTagIDs() {
+        List<Integer> IDs = new ArrayList<>();
+        if (hasTarget()) {
+            for (int i = 0; i < fiducials.size(); i++) {
+                IDs.add(fiducials.get(i).getFiducialId());
+            }
+        }
+        return IDs; // Returns an empty list if there are no targets
     }
 
     public void switchPipeline(int pipeline){
